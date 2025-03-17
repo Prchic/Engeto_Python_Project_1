@@ -40,7 +40,7 @@ print("----------------------------------------")
 # zjistí, jestli zadané údaje odpovídají někomu z registrovaných uživatelů.
 # Pokud je registrovaný, pozdravi jej a umožni mu analyzovat texty. Pokud ne, vyhodí hlášku a ukončí program. 
 registred_users = {
-    "bob":123,
+    "bob":"123",
     "ann":"pass123",
     "mike":"password123",
     "liz":"pass123"
@@ -57,6 +57,7 @@ print("----------------------------------------")
 num_text = input("Enter a number btw. 1 and 3 to select: ")
 if not (num_text.isdigit() and 1 <= int(num_text) <= 3):
     print("Invalid input. Please enter a number between 1 and 3.")
+    exit()
 else:
     num_text = int(num_text)-1
     
@@ -71,7 +72,7 @@ print(f"There are {count_words} words in the selected text")
 # počet slov psaných s počátečním velkým písmenem,
 titlecase_word = 0
 for word in selected_text:
-    if word.istitle() and not word.isupper():
+    if word.istitle():
         titlecase_word += 1
 print(f"There are  {titlecase_word} titlecase words.")
 
@@ -91,17 +92,15 @@ print(f"There are  {lowercase_word} lowercase words.")
 
 # počet čísel (ne cifer)
 digit_words = 0
+sum_of_numbers = 0
+
 for word in selected_text:
     if word.isdigit():
         digit_words += 1
-print(f"There are {digit_words} numeric strings.")
+        sum_of_numbers += int(word)
 
-# sumu všech čísel (ne cifer) v textu
-sum_of_numbers = 0
-for word in selected_text:
-    if word.isdigit():  # Kontrola, zda je znak číslice
-        sum_of_numbers += int(word)  # Přidám číslici k aktuálnímu číslu
-print("The sum of all the numbers ", sum_of_numbers)
+print(f"There are {digit_words} numeric strings.")
+print(f"The sum of all the numbers is {sum_of_numbers}")
 # --------------------------------------------------------------------------------
 # Grafické rozhraní
 print("""
@@ -122,13 +121,7 @@ for word in selected_text:
 
 sorted_lengths = sorted(word_length_counts.keys()) # Seřadí podle délky slov
 
-# Smyčka pro výstup
-line_number = 1  # Počítadlo řádků
-max_line_number = len(sorted_lengths)  # Největší pořadové číslo
-line_number_width = len(str(max_line_number))  # Šířka pro zarovnání čísel
-
+# Výpis histogramu BEZ škálování (plný počet hvězdiček)
 for length in sorted_lengths:
-    count = word_length_counts[length]  # Počet slov dané délky
-    count_star = 25 - count
-    print(f"{line_number:>{line_number_width}} | {'*' * count}{" " * count_star}| {count}")
-    line_number += 1  # Zvýší pořadové číslo řádku
+    count = word_length_counts[length]  # Počet slov této délky
+    print(f"{length:>2} | {'*' * count} | {count}")
