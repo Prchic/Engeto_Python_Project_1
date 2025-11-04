@@ -4,124 +4,130 @@ projekt_1.py: první projekt do Engeto Online Python Akademie
 author: Martin Prchal
 email: prchalmartin2@gmail.com
 """
+
 # Začátek kódu
+
+SEPARATOR = "-" * 60
+
+USERS = {
+    "bob": "123",
+    "ann": "pass123",
+    "mike": "password123",
+    "liz": "pass123",
+}
+
 TEXTS = [
-    '''Situated about 10 miles west of Kemmerer,
-    Fossil Butte is a ruggedly impressive
-    topographic feature that rises sharply
-    some 1000 feet above Twin Creek Valley
-    to an elevation of more than 7500 feet
-    above sea level. The butte is located just
-    north of US 30 and the Union Pacific Railroad,
-    which traverse the valley.''',
-    '''At the base of Fossil Butte are the bright
-    red, purple, yellow and gray beds of the Wasatch
-    Formation. Eroded portions of these horizontal
-    beds slope gradually upward from the valley floor
-    and steepen abruptly. Overlying them and extending
-    to the top of the butte are the much steeper
-    buff-to-white beds of the Green River Formation,
-    which are about 300 feet thick.''',
-    '''The monument contains 8198 acres and protects
-    a portion of the largest deposit of freshwater fish
-    fossils in the world. The richest fossil fish deposits
-    are found in multiple limestone layers, which lie some
-    100 feet below the top of the butte. The fossils
-    represent several varieties of perch, as well as
-    other freshwater genera and herring similar to those
-    in modern oceans. Other fish such as paddlefish,
-    garpike and stingray are also present.'''
+    (
+        'Situated about 10 miles west of Kemmerer, Fossil Butte is a '
+        'ruggedly impressive topographic feature that rises sharply '
+        'some 1000 feet above Twin Creek Valley to an elevation of '
+        'more than 7500 feet above sea level. The butte is located '
+        'just north of U.S. 30N and the Union Pacific Railroad, '
+        'which traverse the valley.'
+    ),
+    (
+        'At the base of Fossil Butte are the bright red, purple, yellow '
+        'and gray beds of the Wasatch Formation. Eroded portions of '
+        'these horizontal beds slope gradually upward from the valley '
+        'floor and steepen abruptly. Overlying them and extending to '
+        'the top of the butte are the much steeper buff-to-white beds '
+        'of the Green River Formation, which are about 300 feet thick.'
+    ),
+    (
+        'The monument contains 8198 acres and protects a portion of '
+        'the largest deposit of freshwater fish fossils in the world. '
+        'The richest fossil fish deposits are found in multiple '
+        'limestone layers, which lie some 100 feet below the top of '
+        'the butte. The fossils represent several varieties of perch, '
+        'as well as other freshwater genera and herring similar to '
+        'those in modern oceans. Other fish such as paddlefish, '
+        'garpike and stingray are also present.'
+    ),
 ]
 
-# Vyžádá si od uživatele přihlašovací jméno a heslo
-user = input("username:")
+# Login
+username = input("username:")
 password = input("password:")
-print("----------------------------------------")
-# zjistí, jestli zadané údaje odpovídají někomu z registrovaných uživatelů.
-# Pokud je registrovaný, pozdravi jej a umožni mu analyzovat texty. Pokud ne, vyhodí hlášku a ukončí program. 
-registred_users = {
-    "bob":"123",
-    "ann":"pass123",
-    "mike":"password123",
-    "liz":"pass123"
-}
-if user in registred_users:
-    print("Welcome to the app,", user)
-else:
-     print("unregistred user, terminating the program..")
-     exit()
 
-# Program nechá uživatele vybrat mezi třemi texty, uloženými v proměnné TEXTS
-print("We have 3 texts to be analyzed.")
-print("----------------------------------------")
-num_text = input("Enter a number btw. 1 and 3 to select: ")
-if not (num_text.isdigit() and 1 <= int(num_text) <= 3):
-    print("Invalid input. Please enter a number between 1 and 3.")
+# Verification of empty entries
+if username == "" or password == "" or username not in USERS or \
+   USERS[username] != password:
+    print("Unregistered user, terminating the program.")
     exit()
-else:
-    num_text = int(num_text)-1
-    
-selected_text = TEXTS[num_text]     # Uložení do proměnné "selected_text"
-selected_text = selected_text.replace("\n", " ").split()    # Smaže oddělovače na začátku a na konci věty. Split() smaže prázdné řetězce
-print("----------------------------------------")
 
-# počet slov
-count_words = len(selected_text)    # Spočítá délku listu - počet hodnot
-print(f"There are {count_words} words in the selected text")
+print(SEPARATOR)
+print(f"Welcome to the app, {username}")
+print(f"We have {len(TEXTS)} texts to be analyzed.")
+print(SEPARATOR)
 
-# počet slov psaných s počátečním velkým písmenem,
-titlecase_word = 0
-for word in selected_text:
-    if word.istitle():
-        titlecase_word += 1
-print(f"There are  {titlecase_word} titlecase words.")
+choice = input("Enter a number btw. 1 and 3 to select: ")
+if not choice.isdigit():
+    print("The selection is not a number, terminating the program.")
+    exit()
 
-# počet slov psaných velkými písmeny,
-uppercase_word = 0
-for word in selected_text:
-    if word.isupper() and word.isalpha():
-        uppercase_word += 1
-print(f"There are  {uppercase_word} uppercase words.")
+index = int(choice)
+if index < 1 or index > len(TEXTS):
+    print("The selected number is out of range, terminating the program.")
+    exit()
 
-# počet slov psaných malými písmeny,počet čísel (ne cifer),
-lowercase_word = 0
-for word in selected_text:
-    if word.islower():
-        lowercase_word += 1
-print(f"There are  {lowercase_word} lowercase words.")
+text = TEXTS[index - 1]
 
-# počet čísel (ne cifer)
-digit_words = 0
-sum_of_numbers = 0
+# Getting a list of words from the text
+punctuation = '.,;:!?()"\''
+raw_words = text.split()
+words = []
 
-for word in selected_text:
-    if word.isdigit():
-        digit_words += 1
-        sum_of_numbers += int(word)
+for word in raw_words:
+    clean_word = word.strip(punctuation)
+    clean_word = clean_word.replace(".", "").replace(",", "")
 
-print(f"There are {digit_words} numeric strings.")
-print(f"The sum of all the numbers is {sum_of_numbers}")
-# --------------------------------------------------------------------------------
-# Grafické rozhraní
-print("""
-----------------------------------------
-LEN|  OCCURENCES  |NR.
-----------------------------------------
-""")
+    if clean_word and clean_word[0].isdigit():
+        while len(clean_word) > 0 and not clean_word[-1].isdigit():
+            clean_word = clean_word[:-1]
 
-word_length_counts = {} # Vytvoří prázdný slovník pro ukládání četnosti délek
+    if clean_word:
+        words.append(clean_word)
 
-# Projde každé slovo v textu
-for word in selected_text:
-    length = len(word)  # Zjistí a uloží délku slova
-    if length in word_length_counts:
-        word_length_counts[length] += 1  # Pokud už tato délka existuje, přičte 1
-    else:
-        word_length_counts[length] = 1  # Jinak vytvoří nový záznam
+# Statistics
+words_total = len(words)
 
-sorted_lengths = sorted(word_length_counts.keys()) # Seřadí podle délky slov
+titlecase = 0
+uppercase = 0
+lowercase = 0
+numbers_cnt = 0
+numbers_sum = 0
 
-# Výpis histogramu BEZ škálování (plný počet hvězdiček)
-for length in sorted_lengths:
-    count = word_length_counts[length]  # Počet slov této délky
-    print(f"{length:>2} | {'*' * count} | {count}")
+for t in words:
+    if t[:1].isupper() and t[1:].islower():
+        titlecase += 1
+    if t.isupper():
+        uppercase += 1
+    if t.islower():
+        lowercase += 1
+    if t.isdigit():
+        numbers_cnt += 1
+        numbers_sum += int(t)
+
+print(SEPARATOR)
+print(f"There are {words_total} words in the selected text.")
+print(f"There are {titlecase} titlecase words.")
+print(f"There are {uppercase} uppercase words.")
+print(f"There are {lowercase} lowercase words.")
+print(f"There are {numbers_cnt} numeric strings.")
+print(f"The sum of all the numbers {numbers_sum}")
+print(SEPARATOR)
+
+# Lens histogram
+lengths = {}
+for t in words:
+    length = len(t)
+    if length not in lengths:
+        lengths[length] = 0
+    lengths[length] += 1
+
+print("LEN|  OCCURRENCES  |NR.")
+print(SEPARATOR)
+for length in sorted(lengths):
+    count = lengths[length]
+    stars = "*" * count
+    print(f"{length:>3} | {stars:<20} | {count}")
